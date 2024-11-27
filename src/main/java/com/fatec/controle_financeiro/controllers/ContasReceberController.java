@@ -20,9 +20,15 @@ public class ContasReceberController {
 
     // CREATE
     @PostMapping("/create")
-    public ResponseEntity<ContasReceber> create(@RequestBody ContasReceber receber) {
-        ContasReceber receberCreated = receberService.create(receber);
-        return new ResponseEntity<>(receberCreated, HttpStatus.CREATED);
+    public ResponseEntity<?> create(@RequestBody ContasReceber receber) {
+        try {
+            ContasReceber receberCreated = receberService.create(receber);
+            return new ResponseEntity<>(receberCreated, HttpStatus.CREATED);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro inesperado: " + ex.getMessage());
+        }
     }
 
     // READ ALL
@@ -42,22 +48,26 @@ public class ContasReceberController {
 
     // UPDATE
     @PutMapping("/update/{id}")
-    public ResponseEntity<ContasReceber> updateReceber(@PathVariable Long id, @RequestBody ContasReceber entity) {
+    public ResponseEntity<?> updateReceber(@PathVariable Long id, @RequestBody ContasReceber entity) {
         try {
             ContasReceber updated = receberService.update(id, entity);
             return new ResponseEntity<>(updated, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        } catch (Exception ex){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
      // DELETE
      @DeleteMapping("/delete/{id}")
-     public ResponseEntity<Void> deleteReceber(@PathVariable Long id) {
+     public ResponseEntity<?> deleteReceber(@PathVariable Long id) {
         try {
             receberService.delete(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        } catch (Exception ex){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
      }

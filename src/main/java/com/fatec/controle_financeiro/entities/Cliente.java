@@ -12,19 +12,19 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "O nome do Cliente é obrigatório.")
+    @NotNull
     @Column(nullable = false, length = 60)
     private String name;
 
     @OneToMany(mappedBy = "cliente")
     private List<ContasReceber> ContasReceber;
 
-    public Cliente() { }
+    public Cliente() { } // Empty Constructor
 
     public Cliente(Long id, String name) {
         this.id = id;
         this.name = name;
-    }
+    } // Constructor
 
     public Long getId() { 
         return id; 

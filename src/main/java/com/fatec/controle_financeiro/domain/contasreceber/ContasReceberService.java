@@ -18,16 +18,22 @@ public class ContasReceberService {
 
     @Transactional
     public ContasReceber create(ContasReceber receber) {
+        if(receber.getEmissao() == null || receber.getVencimento() == null){
+            throw new IllegalArgumentException("As datas não podem ser vazias.");
+        }
+        if(receber.getCliente() == null){
+            throw new IllegalArgumentException("O cliente não pode ser vazio.");
+        }
         if(receber.getEmissao().isAfter(receber.getVencimento())){
-            throw new IllegalArgumentException("A data de vencimento não pode ser menor que a data de emissão");
+            throw new IllegalArgumentException("A data de vencimento não pode ser menor que a data de emissão.");
         }
         BigDecimal valorZero = BigDecimal.ZERO;
-        if(receber.getValor().compareTo(valorZero) <= 0 ){
-            throw new IllegalArgumentException("O valor não pode ser 0 ou menor.");
+        if(receber.getValor().compareTo(valorZero) <= 0 || receber.getValor() == null){
+            throw new IllegalArgumentException("Valor inválido, o valor deve ser superior à 0 e não pode ser vazio.");
         }
-        return contasReceberRepository.save(receber);
+        return contasReceberRepository.save(receber);        
     }
-
+    
     public List<ContasReceber> findAll() {
         return contasReceberRepository.findAll();
     }

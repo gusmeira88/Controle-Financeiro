@@ -20,9 +20,15 @@ public class ContasPagarController {
 
     // CREATE
     @PostMapping("/create")
-    public ResponseEntity<ContasPagar> create(@RequestBody ContasPagar pagar) {
-        ContasPagar pagarCreated = pagarService.create(pagar);
-        return new ResponseEntity<>(pagarCreated, HttpStatus.CREATED);
+    public ResponseEntity<?> create(@RequestBody ContasPagar pagar) {
+        try {
+            ContasPagar pagarCreated = pagarService.create(pagar);
+            return new ResponseEntity<>(pagarCreated, HttpStatus.CREATED);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro inesperado: " + ex.getMessage());
+        }
     }
     
     // READ ALL
@@ -42,22 +48,26 @@ public class ContasPagarController {
 
     // UPDATE
     @PutMapping("/update/{id}")
-    public ResponseEntity<ContasPagar> updatePagar(@PathVariable Long id, @RequestBody ContasPagar entity) {
+    public ResponseEntity<?> updatePagar(@PathVariable Long id, @RequestBody ContasPagar entity) {
         try {
             ContasPagar updated = pagarService.update(id, entity);
             return new ResponseEntity<>(updated, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        } catch (Exception ex){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     // DELETE
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deletePagar(@PathVariable Long id) {
+    public ResponseEntity<?> deletePagar(@PathVariable Long id) {
         try {
             pagarService.delete(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        } catch (Exception ex){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
