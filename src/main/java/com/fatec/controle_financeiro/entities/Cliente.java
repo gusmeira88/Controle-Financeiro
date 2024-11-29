@@ -13,7 +13,7 @@ public class Cliente {
     private Long id;
 
     @NotNull
-    @Column(nullable = false, length = 60)
+    @Column(length = 60)
     private String name;
 
     @OneToMany(mappedBy = "cliente")
