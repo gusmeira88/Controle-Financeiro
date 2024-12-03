@@ -16,6 +16,7 @@ public class ContasPagarController {
 
     public ContasPagarController(ContasPagarService pagarService){
         this.pagarService = pagarService;
+        
     }
 
     // CREATE
